@@ -299,12 +299,17 @@ function init() {
 }
 
 function resetData() {
-  if (confirm('确定重置今日所有记录？')) {
-    data = JSON.parse(JSON.stringify(DEF));
-    save();
-    render();
-    toast('已重置');
-  }
+  if (!confirm('确定重置今日所有记录？')) return;
+  data.members.forEach(function(m) {
+    m.tasks.forEach(function(t) {
+      t.isDone = false;
+      t.time = '';
+      t.synced = false;
+    });
+  });
+  save();
+  render();
+  toast('已重置');
 }
 
 /* 渲染 */
@@ -378,6 +383,11 @@ function renderMembers() {
 function toggleTask(mid, tid) {
   var m = data.members.find(function(x) { return x.id === mid; });
   var t = m.tasks.find(function(x) { return x.id === tid; });
+  /* 已完成的任务，只有编辑模式下才能取消 */
+  if (t.isDone && editModeMid !== mid) {
+    toast('点击「编辑」后才能取消');
+    return;
+  }
   t.isDone = !t.isDone;
   t.time = t.isDone ? nowT() : '';
   if (!t.isDone) t.synced = false;
