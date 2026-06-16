@@ -56,6 +56,12 @@ body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:110px
 .tacts{display:flex;gap:4px;padding-right:4px}.tacts button{background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;display:flex;align-items:center}
 .abtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:var(--grnlt);border:none;border-radius:var(--rsm);font-size:14px;font-weight:700;color:var(--green);cursor:pointer;margin-top:12px;width:100%;transition:all .2s}
 .abtn:active{transform:scale(.98)}
+.login-btn{padding:8px 16px;background:var(--card);border:2px solid var(--green);border-radius:24px;font-size:14px;font-weight:700;color:var(--green);cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:var(--sd)}
+.login-btn.on{background:var(--green);color:#fff}
+.drag-handle{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;cursor:grab;color:var(--sub);font-size:18px;user-select:none;touch-action:none;flex-shrink:0}
+.drag-handle:active{cursor:grabbing;background:var(--box)}
+.mc.dragging{opacity:.6;transform:scale(.97);box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.mc.drag-placeholder{border:2px dashed var(--green);background:var(--grnlt);opacity:.5}
 .ovr{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:600;display:none;align-items:flex-end;justify-content:center}
 .ovr.show{display:flex}
 .sht{background:#fff;border-radius:24px 24px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;animation:su .3s ease;position:relative}
@@ -293,6 +299,7 @@ function toast(msg) {
 
 /* 初始化 */
 function init() {
+  loggedIn = localStorage.getItem('fc_login') === '1';
   var s = localStorage.getItem('fc_v4');
   if (s) {
     data = JSON.parse(s);
@@ -343,6 +350,7 @@ function renderFilters() {
   data.members.forEach(function(m) {
     h += '<button class="pill ' + (filter === m.id ? 'act' : '') + '" onclick="setFilter(\'' + m.id + '\')">' + m.name + '</button>';
   });
+  h += '<button class="login-btn' + (loggedIn ? ' on' : '') + '" onclick="toggleLogin()">' + (loggedIn ? '已登录' : '登录') + '</button>';
   c.innerHTML = h;
 }
 
@@ -360,7 +368,7 @@ function renderMembers() {
     (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
       var cls = t.isDone ? 'done' : '';
       var ts = t.isDone ? '已记录 ' + t.time : (t.trackSteps ? '已走' + getTodaySteps() + '步 · 点击更新' : '待完成');
-      var tt = (t.pinned && !t.isDone ? '📌' : '') + ' ' + (t.emoji || '') + ' ' + (t.isDone ? ('已' + t.title.replace(/^已/, '')) : t.title);
+      var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + (t.emoji || '') + ' ' + (t.isDone ? ('已' + t.title.replace(/^已/, '')) : t.title);
       th += '<div class="ti ' + cls + '" onclick="toggleTask(\'' + m.id + '\',\'' + t.id + '\')">'
         + '<div class="tico"><div class="chk">'
         + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
@@ -374,10 +382,12 @@ function renderMembers() {
     });
     var card = document.createElement('div');
     card.className = 'mc';
+    card.setAttribute('data-mid', m.id);
     var isEdit = editModeMid === m.id;
-    card.innerHTML = '<div class="mhd"><div class="minfo"><div><div class="mname">' + m.name + '</div><div class="mst">' + m.status + '</div></div></div>'
-      + '<div style="display:flex;align-items:center;gap:8px"><div class="bg">' + done + '/' + m.tasks.length + '</div>'
-      + '<button onclick="toggleEditMode(\'' + m.id + '\')" style="background:' + (isEdit ? 'var(--grnlt)' : 'var(--box)') + ';border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;font-weight:700;color:' + (isEdit ? 'var(--green)' : 'var(--sub)') + '">' + (isEdit ? '✅ 完成' : '✏️ 编辑') + '</button></div></div>'
+    var dragH = loggedIn ? '<div class="drag-handle" ontouchstart="dragStart(event,\'' + m.id + '\')" onmousedown="dragStart(event,\'' + m.id + '\')">⠿</div>' : '';
+    card.innerHTML = '<div class="mhd">' + dragH + '<div class="minfo"><div><div class="mname">' + m.name + '</div><div class="mst">' + m.status + '</div></div></div>'
+      + '<div style="display:flex;align-items:center;gap:8px">'
+      + '<button onclick="toggleEditMode(\'' + m.id + '\')" style="background:' + (isEdit ? 'var(--grnlt)' : 'var(--box)') + ';border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;font-weight:700;color:' + (isEdit ? 'var(--green)' : 'var(--sub)') + ';opacity:.5">' + (isEdit ? '完成' : '编辑') + '</button></div></div>'
       + '<div class="tl">' + th + '</div>'
       + '<button class="abtn" onclick="openTaskModal(\'' + m.id + '\')">＋ 添加任务</button>';
     c.appendChild(card);
@@ -504,6 +514,114 @@ function saveMemEdit() {
   renderMemList();
   toast('已更新【' + name + '】');
 }
+
+var loggedIn = false;
+
+function toggleLogin() {
+  loggedIn = !loggedIn;
+  localStorage.setItem('fc_login', loggedIn ? '1' : '0');
+  toast(loggedIn ? '已登录，可拖动卡片排序' : '已退出登录');
+  render();
+}
+
+/* 拖拽排序 */
+var dragMid = null;
+var dragEl = null;
+var dragStartY = 0;
+var dragPlaceholder = null;
+var dragInitialIdx = -1;
+
+function dragStart(e, mid) {
+  if (!loggedIn) return;
+  e.preventDefault();
+  dragMid = mid;
+  dragEl = document.querySelector('.mc[data-mid="' + mid + '"]');
+  if (!dragEl) return;
+  var t = e.touches ? e.touches[0] : e;
+  dragStartY = t.clientY;
+  dragInitialIdx = data.members.findIndex(function(x) { return x.id === mid; });
+  dragEl.classList.add('dragging');
+  dragPlaceholder = dragEl.cloneNode(true);
+  dragPlaceholder.removeAttribute('data-mid');
+  dragPlaceholder.classList.remove('dragging');
+  dragPlaceholder.classList.add('drag-placeholder');
+  dragPlaceholder.querySelectorAll('.drag-handle,.tacts,button').forEach(function(el) { el.style.display = 'none'; });
+  dragPlaceholder.style.pointerEvents = 'none';
+  dragEl.parentNode.insertBefore(dragPlaceholder, dragEl.nextSibling);
+  dragEl.style.position = 'relative';
+  dragEl.style.zIndex = '100';
+}
+
+function dragMove(e) {
+  if (!dragEl) return;
+  e.preventDefault();
+  var t = e.touches ? e.touches[0] : e;
+  var dy = t.clientY - dragStartY;
+  dragEl.style.transform = 'translateY(' + dy + 'px)';
+
+  var cards = document.querySelectorAll('.mc:not(.dragging):not(.drag-placeholder)');
+  var targetIdx = -1;
+  cards.forEach(function(card, i) {
+    var rect = card.getBoundingClientRect();
+    var midY = rect.top + rect.height / 2;
+    if (t.clientY > midY) targetIdx = i + 1;
+    else if (targetIdx === -1) targetIdx = i;
+  });
+  if (targetIdx === -1) targetIdx = 0;
+
+  var placeholders = document.querySelectorAll('.drag-placeholder');
+  placeholders.forEach(function(p) {
+    if (p !== dragPlaceholder) p.remove();
+  });
+
+  var ms = document.getElementById('memberBox');
+  var allCards = ms.querySelectorAll('.mc');
+  if (targetIdx >= allCards.length) {
+    ms.appendChild(dragPlaceholder);
+  } else {
+    ms.insertBefore(dragPlaceholder, allCards[targetIdx]);
+  }
+}
+
+function dragEnd(e) {
+  if (!dragEl) return;
+  dragEl.classList.remove('dragging');
+  dragEl.style.transform = '';
+  dragEl.style.position = '';
+  dragEl.style.zIndex = '';
+
+  /* 将拖拽元素插入到占位符位置 */
+  var ph = document.querySelector('.drag-placeholder');
+  if (ph) {
+    ph.parentNode.insertBefore(dragEl, ph);
+    ph.remove();
+  }
+
+  /* 读取最终 DOM 顺序 */
+  var boxes = document.querySelectorAll('#memberBox .mc[data-mid]');
+  var newOrder = [];
+  boxes.forEach(function(b) { newOrder.push(b.getAttribute('data-mid')); });
+
+  var newMembers = [];
+  newOrder.forEach(function(id) {
+    var m = data.members.find(function(x) { return x.id === id; });
+    if (m) newMembers.push(m);
+  });
+  data.members = newMembers;
+  save();
+  render();
+  toast('排序已更新');
+
+  dragMid = null;
+  dragEl = null;
+  dragPlaceholder = null;
+  dragInitialIdx = -1;
+}
+
+document.addEventListener('touchmove', function(e) { if (dragEl) dragMove(e); }, {passive: false});
+document.addEventListener('mousemove', function(e) { if (dragEl) dragMove(e); });
+document.addEventListener('touchend', function(e) { if (dragEl) dragEnd(e); });
+document.addEventListener('mouseup', function(e) { if (dragEl) dragEnd(e); });
 
 function toggleEditMode(mid) {
   editModeMid = (editModeMid === mid) ? null : mid;
