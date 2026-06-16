@@ -104,7 +104,7 @@ body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:110px
 <div class="ibnr" id="ibnr"><div class="ibnrt">安装到主屏幕，像 App 一样使用</div><button class="ibnrb" id="ibnrBtn">安装</button><button class="ibnrx" id="ibnrX">&times;</button></div>
 
 <div class="wrap">
-<div class="header"><h1>今日</h1><button class="bref" onclick="resetData()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button></div>
+<div class="header"><h1>今日</h1></div>
 
 <div class="scard">
 <div class="shd"><div><h2>My Family</h2><div class="sdate" id="curDate"></div></div></div>
@@ -235,23 +235,11 @@ if ('serviceWorker' in navigator) {
 var DEF = {
   members: [
     {id:'m1', name:'秦闻达', status:'高血压', tasks:[
-      {id:'t1', title:'吃早药', emoji:'💊', isDone:false, time:'', synced:false},
-      {id:'t2', title:'测血压', emoji:'🌡️', isDone:false, time:'', synced:false},
-      {id:'t3', title:'吃晚药', emoji:'💊', isDone:false, time:'', synced:false},
-      {id:'t4', title:'晚上泡脚', emoji:'🦶', isDone:false, time:'', synced:false},
-      {id:'t5', title:'记录体温', emoji:'🌡️', isDone:false, time:'', synced:false},
-      {id:'t6', title:'更换敷料', emoji:'🩹', isDone:false, time:'', synced:false}
+      {id:'t1', title:'高血压药', emoji:'💊', pinned:true, isDone:false, time:'', synced:false},
+      {id:'t2', title:'3公里散步', emoji:'🚶', pinned:true, isDone:false, time:'', synced:false, trackSteps:true}
     ]},
-    {id:'m2', name:'孙传兰', status:'目标减重', tasks:[
-      {id:'t7', title:'吃早药', emoji:'💊', isDone:false, time:'', synced:false},
-      {id:'t8', title:'饭后散步', emoji:'🚶', isDone:false, time:'', synced:false},
-      {id:'t9', title:'测血糖', emoji:'🌡️', isDone:false, time:'', synced:false}
-    ]},
-    {id:'m3', name:'秦佳晗', status:'正常', tasks:[
-      {id:'t10', title:'晨间伸展', emoji:'😴', isDone:false, time:'', synced:false},
-      {id:'t11', title:'饮水打卡', emoji:'💧', isDone:false, time:'', synced:false},
-      {id:'t12', title:'测量心率', emoji:'❤️', isDone:false, time:'', synced:false}
-    ]}
+    {id:'m2', name:'孙传兰', status:'目标减重', tasks:[]},
+    {id:'m3', name:'秦佳晗', status:'正常', tasks:[]}
   ]
 };
 
@@ -262,6 +250,23 @@ var editModeMid = null;
 var tidCnt = 100;
 
 function genTid() { tidCnt++; return 't' + tidCnt; }
+
+/* 步数追踪 */
+function getStepKey() {
+  var d = new Date();
+  return 'fc_steps_' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+}
+function getTodaySteps() { return parseInt(localStorage.getItem(getStepKey()) || '0'); }
+function updateTodaySteps(mid, tid) {
+  var cur = getTodaySteps();
+  var v = prompt('输入今天步数（目前：' + cur + '步）', cur || '');
+  if (v === null) return;
+  var n = parseInt(v, 10);
+  if (isNaN(n) || n < 0) { alert('请输入有效数字'); return; }
+  localStorage.setItem(getStepKey(), String(n));
+  render();
+  toast('步数已更新');
+}
 
 function todayStr() {
   var d = new Date();
@@ -352,16 +357,16 @@ function renderMembers() {
     var done = 0;
     m.tasks.forEach(function(t) { if (t.isDone) done++; });
     var th = '';
-    m.tasks.forEach(function(t) {
+    (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
       var cls = t.isDone ? 'done' : '';
-      var ts = t.isDone ? '已记录 ' + t.time : '待完成';
-      var tt = t.isDone ? ('已' + t.title.replace(/^已/, '')) : t.title;
+      var ts = t.isDone ? '已记录 ' + t.time : (t.trackSteps ? '已走' + getTodaySteps() + '步 · 点击更新' : '待完成');
+      var tt = (t.pinned && !t.isDone ? '📌' : '') + ' ' + (t.emoji || '') + ' ' + (t.isDone ? ('已' + t.title.replace(/^已/, '')) : t.title);
       th += '<div class="ti ' + cls + '" onclick="toggleTask(\'' + m.id + '\',\'' + t.id + '\')">'
         + '<div class="tico"><div class="chk">'
         + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
         + '</div></div>'
-        + '<div class="tbody"><div class="ttit">' + (t.emoji || '') + ' ' + tt + '</div><div class="ttime">' + ts + '</div></div>'
-        + '<div class="tacts">' + (editModeMid === m.id ? '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:16px">🗑️</button>' + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:16px;display:flex;align-items:center">🔔</button>' : '') + '<button onclick="event.stopPropagation();openTaskModal(\'' + m.id + '\',\'' + t.id + '\')">'
+        + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime"' + (t.trackSteps && !t.isDone ? ' onclick="event.stopPropagation();updateTodaySteps(\'' + m.id + '\',\'' + t.id + '\')" style="cursor:pointer;color:var(--green)"' : '') + '>' + ts + '</div></div>'
+        + '<div class="tacts">' + (editModeMid === m.id ? (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:16px">🗑️</button>') + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:16px;display:flex;align-items:center">🔔</button>' : '') + (t.pinned ? '' : '<button onclick="event.stopPropagation();openTaskModal(\'' + m.id + '\',\'' + t.id + '\')">')
         + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">'
         + '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>'
         + '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' : '') + '</div>'
@@ -572,8 +577,10 @@ function drawDonut(done, undone) {
 
 /* 删除任务 */
 function deleteTask(mid, tid) {
-  if (!confirm('确定删除该任务？')) return;
   var m = data.members.find(function(x) { return x.id === mid; });
+  var t = m.tasks.find(function(x) { return x.id === tid; });
+  if (t && t.pinned) { toast('置顶任务不可删除'); return; }
+  if (!confirm('确定删除该任务？')) return;
   m.tasks = m.tasks.filter(function(t) { return t.id !== tid; });
   save(); render();
   toast('任务已删除');
