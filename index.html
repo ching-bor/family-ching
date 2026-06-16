@@ -161,7 +161,7 @@ body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:110px
 <div id="editCard" style="background:var(--card);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);display:none">
 <input type="hidden" id="emId">
 <div class="fg"><label>姓名</label><input type="text" id="emName"></div>
-<div class="fg"><label>健康/照顾状况</label><input type="text" id="emStatus"></div>
+<div class="fg"><label>关于</label><input type="text" id="emStatus"></div>
 <button class="btng" onclick="saveMemEdit()">确认保存</button>
 </div>
 </div>
@@ -234,12 +234,12 @@ if ('serviceWorker' in navigator) {
 /* 数据 */
 var DEF = {
   members: [
-    {id:'m1', name:'秦闻达', status:'高血压', tasks:[
+    {id:'m1', name:'秦闻达', status:'', tasks:[
       {id:'t1', title:'高血压药', emoji:'💊', pinned:true, isDone:false, time:'', synced:false},
       {id:'t2', title:'3公里散步', emoji:'🚶', pinned:true, isDone:false, time:'', synced:false, trackSteps:true}
     ]},
-    {id:'m2', name:'孙传兰', status:'目标减重', tasks:[]},
-    {id:'m3', name:'秦佳晗', status:'正常', tasks:[]}
+    {id:'m2', name:'孙传兰', status:'', tasks:[]},
+    {id:'m3', name:'秦佳晗', status:'', tasks:[]}
   ]
 };
 
@@ -498,7 +498,7 @@ function saveMemEdit() {
   if (!name) { alert('姓名不能为空'); return; }
   var m = data.members.find(function(x) { return x.id === id; });
   m.name = name;
-  m.status = status || '常规护理';
+  m.status = status;
   save();
   render();
   renderMemList();
