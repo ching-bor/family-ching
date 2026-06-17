@@ -23,10 +23,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .header h1{font-size:34px;font-weight:800;letter-spacing:1px}
 .bref{width:44px;height:44px;background:rgba(255,255,255,.07);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--sd);border:1px solid rgba(255,255,255,.1);cursor:pointer;color:var(--green);transition:transform .2s}
 .bref:active{transform:scale(.9)}
-.scard{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);margin-bottom:24px;cursor:pointer;transition:background .3s}
-.scard.sel{background:rgba(255,255,255,.85);border-color:rgba(255,255,255,.5)}
-.scard.sel .sdate,.scard.sel .sv,.scard.sel .sl,.scard.sel .stat{color:#111}
-.scard.sel .stat .sl{color:#555}
+.scard{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);margin-bottom:24px}
 .shd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .shd h2{font-size:24px;font-weight:800;margin-bottom:4px}
 .sdate{color:var(--sub);font-size:15px;font-weight:500}
@@ -42,12 +39,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .pill{padding:10px 20px;background:rgba(255,255,255,.07);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:26px;font-size:15px;font-weight:700;color:var(--txt);cursor:pointer;white-space:nowrap;box-shadow:var(--sd);transition:all .2s}
 .pill.act{background:var(--green);color:#000}
 .ms{display:flex;flex-direction:column;gap:20px}
-.mc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);cursor:pointer;transition:background .3s}
-.mc.sel{background:rgba(255,255,255,.85);border-color:rgba(255,255,255,.5)}
-.mc.sel .mname,.mc.sel .mst,.mc.sel .ttit,.mc.sel .ttime{color:#111}
-.mc.sel .mst,.mc.sel .ttime{color:#555}
-.mc.sel .ti{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.06)}
-.mc.sel .ti.done{background:rgba(92,219,149,.12)}
+.mc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd)}
 .mhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .minfo{display:flex;align-items:center;gap:12px}
 .mava{width:48px;height:48px;background:var(--orlt);color:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px}
@@ -95,8 +87,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .bkb{background:none;border:none;font-size:16px;color:var(--green);font-weight:700;cursor:pointer}
 .mli{background:rgba(255,255,255,.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:var(--rmd);padding:16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;box-shadow:var(--sd);cursor:pointer;transition:all .2s}
 .mli.sel{border-color:var(--green);background:rgba(92,219,149,.1)}
-.cs{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);margin-bottom:20px;cursor:pointer;transition:background .3s}
-.cs.sel{background:rgba(255,255,255,.85);border-color:rgba(255,255,255,.5)}
+.cs{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);margin-bottom:20px}
 .ct{font-size:18px;font-weight:800;margin-bottom:18px}
 .br{display:flex;align-items:center;margin-bottom:16px}
 .blb{width:70px;font-size:14px;font-weight:700;text-align:right;padding-right:12px;flex-shrink:0}
@@ -146,7 +137,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="wrap">
 <div class="header"><h1>今日</h1></div>
 
-<div class="scard" onclick="toggleCardSelect(this, event)">
+<div class="scard">
 <div class="shd"><div><h2>My Family</h2><div class="sdate" id="curDate"></div></div><div style="display:flex;align-items:center;gap:8px"><button class="flt-toggle" id="fltToggle" onclick="toggleFilterPanel()" title="筛选">+</button><button class="calbtn" onclick="openCalendarPage()" title="日历记录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button></div></div>
 <div class="pc"><div class="pf" id="progBar" style="width:0%"></div></div>
 <div class="stats">
@@ -204,7 +195,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="sp" id="familyPage">
 <div class="spc">
 <div class="sphd"><button class="bkb" onclick="closeFamilyPage()">⟨ 返回</button><div style="flex:1;text-align:center;font-size:20px;font-weight:800;margin-right:40px">家庭总览</div></div>
-<div class="cs" onclick="toggleCardSelect(this, event)">
+<div class="cs">
 <div class="ct">任务完成统计</div>
 <div id="barsBox"></div>
 <div class="csm">
@@ -213,7 +204,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="csmi"><div class="csmv" id="smP">0%</div><div class="csml">完成率</div></div>
 </div>
 </div>
-<div class="cs" onclick="toggleCardSelect(this, event)">
+<div class="cs">
 <div class="ct">完成率</div>
 <canvas id="donutC" style="display:block;margin:0 auto;max-width:100%;width:280px;height:210px"></canvas>
 </div>
@@ -224,7 +215,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="sp" id="calendarPage">
 <div class="spc">
 <div class="sphd"><button class="bkb" onclick="closeCalendarPage()">⟨ 返回</button><div style="flex:1;text-align:center;font-size:20px;font-weight:800;margin-right:40px">任务日历</div></div>
-<div class="cs" onclick="toggleCardSelect(this, event)">
+<div class="cs">
 <div class="calnav">
 <button class="calarr" onclick="calPrevMonth()">◀</button>
 <div class="calmon" id="calMonLabel"></div>
@@ -393,12 +384,6 @@ function render() {
 
 var showFilterPanel = false;
 
-function toggleCardSelect(el, e) {
-  var tag = e.target.tagName.toLowerCase();
-  if (tag === 'button' || tag === 'input' || tag === 'a' || e.target.closest('button') || e.target.closest('.cp')) return;
-  el.classList.toggle('sel');
-}
-
 function toggleFilterPanel() {
   showFilterPanel = !showFilterPanel;
   var panel = document.getElementById('fltPanel');
@@ -453,7 +438,6 @@ function renderMembers() {
     var card = document.createElement('div');
     card.className = 'mc';
     card.setAttribute('data-mid', m.id);
-    card.setAttribute('onclick', 'toggleCardSelect(this, event)');
     var isEdit = editModeMid === m.id;
     var dragH = loggedIn ? '<div class="drag-handle" ontouchstart="dragStart(event,\'' + m.id + '\')" onmousedown="dragStart(event,\'' + m.id + '\')">⠿</div>' : '';
     card.innerHTML = '<div class="mhd">' + dragH + '<div class="minfo"><div><div class="mname">' + m.name + '</div><div class="mst">' + m.status + '</div></div></div>'
