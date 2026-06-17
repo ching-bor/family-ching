@@ -131,11 +131,11 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .calarr{background:rgba(255,255,255,.07);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--sub);transition:all .2s}
 .calarr:active{transform:scale(.9)}
 /* 搜索栏 */
-.search-bar{display:flex;align-items:center;background:rgba(255,255,255,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:0 6px 0 20px;margin-bottom:24px;box-shadow:var(--sd)}
-.search-bar input{flex:1;background:none;border:none;outline:none;color:var(--txt);font-size:15px;font-weight:500;padding:14px 0;font-family:inherit}
-.search-bar input::placeholder{color:rgba(255,255,255,.2);font-weight:400;font-style:italic}
-.search-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.3);font-size:18px;font-weight:300;transition:all .2s;flex-shrink:0}
-.search-btn:active{background:rgba(255,255,255,.15)}
+.search-bar{display:flex;align-items:center;background:#fff;border-radius:28px;padding:0 6px 0 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:#333;font-size:15px;font-weight:500;padding:14px 0;font-family:inherit}
+.search-bar input::placeholder{color:#bbb;font-weight:400;font-style:italic}
+.search-btn{width:36px;height:36px;border-radius:50%;background:#f0f0f0;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;font-size:18px;font-weight:300;transition:all .2s;flex-shrink:0}
+.search-btn:active{background:#e0e0e0;color:#555}
 </style>
 </head>
 <body>
@@ -157,7 +157,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="flt-panel" id="fltPanel"><div class="flt-panel-inner" id="fltPanelInner"></div></div>
 </div>
 
-<div class="search-bar"><input type="text" placeholder="Less is more ..."><button class="search-btn">&gt;</button></div>
+<div class="search-bar"><input type="text" id="searchInput" placeholder="Less is more ..." onkeydown="if(event.key==='Enter')doSearch()"><button class="search-btn" onclick="doSearch()">&gt;</button></div>
 
 <div class="ms" id="memberBox"></div>
 </div>
@@ -343,6 +343,13 @@ function toast(msg) {
   t.innerText = msg;
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+
+/* 搜索 */
+function doSearch() {
+  var q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+  window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(q), '_blank');
 }
 
 /* 初始化 */
