@@ -67,7 +67,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .mc.drag-placeholder{border:2px dashed var(--green);background:rgba(92,219,149,.06);opacity:.5}
 .ovr{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:600;display:none;align-items:flex-end;justify-content:center}
 .ovr.show{display:flex}
-.sht{background:rgba(20,30,25,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:28px 28px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;animation:su .3s ease;position:relative}
+.sht{background:rgba(20,30,25,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:36px 36px 0 0;padding:28px 20px 40px;width:100%;max-width:480px;animation:su .3s ease;position:relative}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .shtt{font-size:20px;font-weight:800;margin-bottom:20px;text-align:center}
 .shx{position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;color:var(--sub);cursor:pointer}
@@ -167,9 +167,9 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="ovr" id="taskOv">
 <div class="sht">
 <button class="shx" onclick="closeTaskModal()">&times;</button>
-<div class="shtt" id="taskTit">添加任务</div>
+<div class="shtt" id="taskTit">添加内容</div>
 <input type="hidden" id="tmMid"><input type="hidden" id="tmTid">
-<div class="fg"><label>任务名称</label><input type="text" id="tmName" placeholder="例如：吃早药"></div>
+<div class="fg"><label>任务</label><input type="text" id="tmName" placeholder=""></div>
 <div class="fg"><label>备注</label><input type="text" id="tmNote" placeholder="小字备注，可不填"></div>
 <button class="btng" onclick="saveTask()">保存</button>
 </div>
@@ -525,13 +525,13 @@ function openTaskModal(mid, tid) {
   document.getElementById('tmMid').value = mid;
   document.getElementById('tmTid').value = tid || '';
   if (tid) {
-    document.getElementById('taskTit').innerText = '编辑任务';
+    document.getElementById('taskTit').innerText = '编辑内容';
     var m = data.members.find(function(x) { return x.id === mid; });
     var t = m.tasks.find(function(x) { return x.id === tid; });
     document.getElementById('tmName').value = t.title;
     document.getElementById('tmNote').value = t.note || '';
   } else {
-    document.getElementById('taskTit').innerText = '添加任务';
+    document.getElementById('taskTit').innerText = '添加内容';
     document.getElementById('tmName').value = '';
     document.getElementById('tmNote').value = '';
   }
