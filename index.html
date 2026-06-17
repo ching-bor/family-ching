@@ -49,7 +49,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .mname{font-size:20px;font-weight:800}.mst{font-size:14px;color:var(--sub);margin-top:2px}
 .bg{background:var(--orlt);color:var(--orange);padding:4px 10px;border-radius:20px;font-size:14px;font-weight:700}
 .tl{display:flex;flex-direction:column;gap:10px}
-.ti{display:flex;align-items:center;padding:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);border-radius:var(--rmd);cursor:pointer;transition:all .2s}
+.ti{display:flex;align-items:center;padding:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);border-radius:var(--rmd);transition:all .2s}
 .ti.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
 .tico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-right:12px;background:rgba(255,255,255,.06);transition:all .3s}
 .ti.done .tico{background:rgba(255,255,255,.15)}
@@ -455,13 +455,13 @@ function renderMembers() {
     var th = '';
     (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
       var cls = t.isDone ? 'done' : '';
-      var ts = t.isDone ? '已记录 ' + t.time : (t.trackSteps ? '已走' + getTodaySteps() + '步 · 点击更新' : '待完成');
+      var ts = t.isDone ? '已记录 ' + t.time : (t.trackSteps ? '已走' + getTodaySteps() + '步' : '待完成');
       var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + t.title;
-      th += '<div class="ti ' + cls + '" onclick="toggleTask(\'' + m.id + '\',\'' + t.id + '\')">'
+      th += '<div class="ti ' + cls + '">'
         + '<div class="tico"><div class="chk">'
         + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
         + '</div></div>'
-        + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime"' + (t.trackSteps && !t.isDone ? ' onclick="event.stopPropagation();updateTodaySteps(\'' + m.id + '\',\'' + t.id + '\')" style="cursor:pointer;color:var(--green)"' : '') + '>' + ts + '</div></div>'
+        + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime">' + ts + '</div></div>'
         + '<div class="tacts">' + (editModeMid === m.id ? (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999;display:flex;align-items:center">提醒</button>' : '') + (t.pinned ? '' : '<button onclick="event.stopPropagation();openTaskModal(\'' + m.id + '\',\'' + t.id + '\')">')
         + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">'
         + '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>'
@@ -473,7 +473,7 @@ function renderMembers() {
     card.setAttribute('data-mid', m.id);
     var isEdit = editModeMid === m.id;
     var dragH = loggedIn ? '<div class="drag-handle" ontouchstart="dragStart(event,\'' + m.id + '\')" onmousedown="dragStart(event,\'' + m.id + '\')">⠿</div>' : '';
-    card.innerHTML = '<div class="mhd">' + dragH + '<div class="minfo"><div><div class="mname">' + m.name + '</div><div class="mst">' + m.status + '</div></div></div>'
+    card.innerHTML = '<div class="mhd">' + dragH + '<div class="minfo"><div>' + (isEdit ? '<input value="' + m.name + '" onchange="updateMemberName(\'' + m.id + '\',this.value)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:18px;font-weight:800;padding:4px 8px;border-radius:8px;width:100%;outline:none;font-family:inherit">' : '<div class="mname">' + m.name + '</div>') + '<div class="mst">' + m.status + '</div></div></div>'
       + '<div style="display:flex;align-items:center;gap:8px">'
       + '<button onclick="toggleEditMode(\'' + m.id + '\')" style="background:' + (isEdit ? 'var(--grnlt)' : 'var(--box)') + ';border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;font-weight:700;color:' + (isEdit ? 'var(--green)' : 'var(--sub)') + ';opacity:.5">' + (isEdit ? '完成' : '编辑') + '</button></div></div>'
       + '<div class="tl">' + th + '</div>'
@@ -783,6 +783,11 @@ document.addEventListener('touchmove', function(e) { if (dragEl) dragMove(e); },
 document.addEventListener('mousemove', function(e) { if (dragEl) dragMove(e); });
 document.addEventListener('touchend', function(e) { if (dragEl) dragEnd(e); });
 document.addEventListener('mouseup', function(e) { if (dragEl) dragEnd(e); });
+
+function updateMemberName(mid, name) {
+  var m = data.members.find(function(x) { return x.id === mid; });
+  if (m && name.trim()) { m.name = name.trim(); save(); }
+}
 
 function toggleEditMode(mid) {
   editModeMid = (editModeMid === mid) ? null : mid;
