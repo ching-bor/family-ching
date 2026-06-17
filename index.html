@@ -50,6 +50,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .bg{background:var(--orlt);color:var(--orange);padding:4px 10px;border-radius:20px;font-size:14px;font-weight:700}
 .tl{display:flex;flex-direction:column;gap:10px}
 .ti{display:flex;align-items:center;padding:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.05);border-radius:var(--rmd);transition:all .2s}
+.ti.pinned{border:1px solid rgba(255,255,255,.35)}
 .ti.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
 
 .tbody{flex:1}.ttit{font-size:16px;font-weight:700;margin-bottom:2px}.ttime{font-size:13px;color:var(--sub)}
@@ -287,10 +288,7 @@ if ('serviceWorker' in navigator) {
 /* 数据 */
 var DEF = {
   members: [
-    {id:'m1', name:'秦闻达', status:'', tasks:[
-      {id:'t1', title:'高血压药', emoji:'', pinned:true, isDone:false, time:'', synced:false},
-      {id:'t2', title:'3公里散步', emoji:'', pinned:true, isDone:false, time:'', synced:false, trackSteps:true}
-    ]},
+    {id:'m1', name:'秦闻达', status:'', tasks:[]},
     {id:'m2', name:'孙传兰', status:'', tasks:[]},
     {id:'m3', name:'秦佳晗', status:'', tasks:[]}
   ]
@@ -452,17 +450,17 @@ function renderMembers() {
     m.tasks.forEach(function(t) { if (t.isDone) done++; });
     var th = '';
     (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
-      var cls = t.isDone ? 'done' : '';
+      var cls = (t.isDone ? 'done' : '') + (t.pinned ? ' pinned' : '');
       var isEditTask = editModeMid === m.id;
       if (isEditTask) {
         var tt2 = '<input value="' + t.title + '" onchange="updateTaskTitle(\'' + m.id + '\',\'' + t.id + '\',this.value)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:15px;font-weight:700;padding:4px 8px;border-radius:6px;width:100%;outline:none;font-family:inherit">';
         var ts2 = '<input value="' + (t.note||'') + '" onchange="updateTaskNote(\'' + m.id + '\',\'' + t.id + '\',this.value)" placeholder="备注" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px;padding:3px 6px;border-radius:4px;width:100%;outline:none;font-family:inherit;margin-top:2px">';
         th += '<div class="ti ' + cls + '">'
           + '<div class="tbody">' + tt2 + ts2 + '</div>'
-          + '<div class="tacts">' + (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + '</div>'
+          + '<div class="tacts">' + (!t.pinned ? '<button onclick="event.stopPropagation();togglePin(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:12px;color:var(--green);opacity:.6">置顶</button>' : '<button onclick="event.stopPropagation();togglePin(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:12px;color:#999">取消置顶</button>') + (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:12px;color:#999">删除</button>') + '</div>'
           + '</div>';
       } else {
-        var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + t.title;
+        var tt = (t.pinned ? '<span style="display:inline-block;border:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.6);font-size:10px;font-weight:500;padding:1px 6px;border-radius:4px;margin-right:6px;vertical-align:middle">置顶</span>' : '') + t.title;
         var ts = t.note || '';
         th += '<div class="ti ' + cls + '">'
           + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime">' + ts + '</div></div>'
@@ -493,6 +491,12 @@ function updateTaskNote(mid, tid, val) {
   var m = data.members.find(function(x) { return x.id === mid; });
   var t = m.tasks.find(function(x) { return x.id === tid; });
   if (t) { t.note = val.trim(); save(); }
+}
+
+function togglePin(mid, tid) {
+  var m = data.members.find(function(x) { return x.id === mid; });
+  var t = m.tasks.find(function(x) { return x.id === tid; });
+  if (t) { t.pinned = !t.pinned; save(); render(); }
 }
 
 /* 任务打卡 */
