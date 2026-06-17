@@ -53,7 +53,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .ti.pinned{border:1px solid rgba(255,255,255,.35)}
 .ti.done{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
 
-.tbody{flex:1}.ttit{font-size:16px;font-weight:700;margin-bottom:2px}.ttime{font-size:13px;color:var(--sub)}
+.tbody{flex:1}.ttit{font-size:14px;font-weight:700;margin-bottom:2px}.ttime{font-size:13px;color:var(--sub)}
 .tacts{display:flex;gap:4px;padding-right:4px}.tacts button{background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;display:flex;align-items:center}
 .abtn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(92,219,149,.08);border:1px solid rgba(92,219,149,.15);border-radius:var(--rsm);font-size:14px;font-weight:700;color:var(--green);cursor:pointer;margin-top:12px;width:100%;transition:all .2s}
 .abtn:active{transform:scale(.98)}
@@ -453,7 +453,7 @@ function renderMembers() {
       var cls = (t.isDone ? 'done' : '') + (t.pinned ? ' pinned' : '');
       var isEditTask = editModeMid === m.id;
       if (isEditTask) {
-        var tt2 = '<input value="' + t.title + '" onchange="updateTaskTitle(\'' + m.id + '\',\'' + t.id + '\',this.value)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:15px;font-weight:700;padding:4px 8px;border-radius:6px;width:100%;outline:none;font-family:inherit">';
+        var tt2 = '<input value="' + t.title + '" onchange="updateTaskTitle(\'' + m.id + '\',\'' + t.id + '\',this.value)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:14px;font-weight:700;padding:4px 8px;border-radius:6px;width:100%;outline:none;font-family:inherit">';
         var ts2 = '<input value="' + (t.note||'') + '" onchange="updateTaskNote(\'' + m.id + '\',\'' + t.id + '\',this.value)" placeholder="备注" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px;padding:3px 6px;border-radius:4px;width:100%;outline:none;font-family:inherit;margin-top:2px">';
         th += '<div class="ti ' + cls + '">'
           + '<div class="tbody">' + tt2 + ts2 + '</div>'
