@@ -456,18 +456,27 @@ function renderMembers() {
     var th = '';
     (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
       var cls = t.isDone ? 'done' : '';
-      var ts = t.note || '';
-      var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + t.title;
-      th += '<div class="ti ' + cls + '">'
-        + '<div class="tico"><div class="chk">'
-        + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
-        + '</div></div>'
-        + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime">' + ts + '</div></div>'
-        + '<div class="tacts">' + (editModeMid === m.id ? (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999;display:flex;align-items:center">提醒</button>' : '') + (t.pinned ? '' : '<button onclick="event.stopPropagation();openTaskModal(\'' + m.id + '\',\'' + t.id + '\')">')
-        + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">'
-        + '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>'
-        + '<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>' : '') + '</div>'
-        + '</div>';
+      var isEditTask = editModeMid === m.id;
+      if (isEditTask) {
+        var tt2 = '<input value="' + t.title + '" onchange="updateTaskTitle(\'' + m.id + '\',\'' + t.id + '\',this.value)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:15px;font-weight:700;padding:4px 8px;border-radius:6px;width:100%;outline:none;font-family:inherit">';
+        var ts2 = '<input value="' + (t.note||'') + '" onchange="updateTaskNote(\'' + m.id + '\',\'' + t.id + '\',this.value)" placeholder="备注" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px;padding:3px 6px;border-radius:4px;width:100%;outline:none;font-family:inherit;margin-top:2px">';
+        th += '<div class="ti ' + cls + '">'
+          + '<div class="tico"><div class="chk">'
+          + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
+          + '</div></div>'
+          + '<div class="tbody">' + tt2 + ts2 + '</div>'
+          + '<div class="tacts">' + (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999;display:flex;align-items:center">提醒</button>' : '') + '</div>'
+          + '</div>';
+      } else {
+        var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + t.title;
+        var ts = t.note || '';
+        th += '<div class="ti ' + cls + '">'
+          + '<div class="tico"><div class="chk">'
+          + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
+          + '</div></div>'
+          + '<div class="tbody"><div class="ttit">' + tt + '</div><div class="ttime">' + ts + '</div></div>'
+          + '</div>';
+      }
     });
     var card = document.createElement('div');
     card.className = 'mc';
@@ -481,6 +490,18 @@ function renderMembers() {
       + '<button class="abtn" onclick="openTaskModal(\'' + m.id + '\')">＋ 添加</button>';
     c.appendChild(card);
   });
+}
+
+/* 内联编辑任务 */
+function updateTaskTitle(mid, tid, val) {
+  var m = data.members.find(function(x) { return x.id === mid; });
+  var t = m.tasks.find(function(x) { return x.id === tid; });
+  if (t && val.trim()) { t.title = val.trim(); save(); }
+}
+function updateTaskNote(mid, tid, val) {
+  var m = data.members.find(function(x) { return x.id === mid; });
+  var t = m.tasks.find(function(x) { return x.id === tid; });
+  if (t) { t.note = val.trim(); save(); }
 }
 
 /* 任务打卡 */
