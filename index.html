@@ -350,7 +350,7 @@ function renderFilters() {
   data.members.forEach(function(m) {
     h += '<button class="pill ' + (filter === m.id ? 'act' : '') + '" onclick="setFilter(\'' + m.id + '\')">' + m.name + '</button>';
   });
-  h += '<button class="login-btn' + (loggedIn ? ' on' : '') + '" onclick="toggleLogin()">' + (loggedIn ? '已登录' : '登录') + '</button>';
+  h += '<button class="login-btn' + (loggedIn ? ' on' : '') + '" onclick="toggleLogin()">' + (loggedIn ? '退出' : '登录') + '</button>';
   c.innerHTML = h;
 }
 
@@ -389,7 +389,7 @@ function renderMembers() {
       + '<div style="display:flex;align-items:center;gap:8px">'
       + '<button onclick="toggleEditMode(\'' + m.id + '\')" style="background:' + (isEdit ? 'var(--grnlt)' : 'var(--box)') + ';border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;font-weight:700;color:' + (isEdit ? 'var(--green)' : 'var(--sub)') + ';opacity:.5">' + (isEdit ? '完成' : '编辑') + '</button></div></div>'
       + '<div class="tl">' + th + '</div>'
-      + '<button class="abtn" onclick="openTaskModal(\'' + m.id + '\')">＋ 添加任务</button>';
+      + '<button class="abtn" onclick="openTaskModal(\'' + m.id + '\')">＋ 添加</button>';
     c.appendChild(card);
   });
 }
