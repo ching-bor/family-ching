@@ -395,7 +395,7 @@ var showFilterPanel = false;
 
 function toggleCardSelect(el, e) {
   var tag = e.target.tagName.toLowerCase();
-  if (tag === 'button' || tag === 'input' || tag === 'a' || e.target.closest('button')) return;
+  if (tag === 'button' || tag === 'input' || tag === 'a' || e.target.closest('button') || e.target.closest('.cp')) return;
   el.classList.toggle('sel');
 }
 
