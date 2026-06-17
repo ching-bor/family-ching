@@ -358,8 +358,11 @@ var quotes = [
   '心宽一寸，路宽一丈',
   '看淡得失，尽享清欢'
 ];
+var quoteIdx = -1;
 function shuffleQuote() {
-  var i = Math.floor(Math.random() * quotes.length);
+  var i;
+  do { i = Math.floor(Math.random() * quotes.length); } while (i === quoteIdx && quotes.length > 1);
+  quoteIdx = i;
   document.getElementById('searchInput').value = quotes[i];
 }
 
@@ -373,6 +376,8 @@ function init() {
     data = JSON.parse(JSON.stringify(DEF));
   }
   document.getElementById('curDate').innerText = todayStr();
+  shuffleQuote();
+  setInterval(shuffleQuote, 3000);
   render();
 }
 
