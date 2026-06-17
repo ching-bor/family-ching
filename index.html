@@ -465,7 +465,7 @@ function renderMembers() {
           + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
           + '</div></div>'
           + '<div class="tbody">' + tt2 + ts2 + '</div>'
-          + '<div class="tacts">' + (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + (!t.isDone ? '<button onclick="event.stopPropagation();openRemModal(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999;display:flex;align-items:center">提醒</button>' : '') + '</div>'
+          + '<div class="tacts">' + (t.pinned ? '' : '<button onclick="event.stopPropagation();deleteTask(\'' + m.id + '\',\'' + t.id + '\')" style="background:none;border:none;cursor:pointer;padding:4px;font-size:14px;color:#999">删除</button>') + '</div>'
           + '</div>';
       } else {
         var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + t.title;
