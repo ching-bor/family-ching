@@ -368,7 +368,7 @@ function renderMembers() {
     (m.tasks.slice().sort(function(a,b){return(b.pinned|0)-(a.pinned|0);})).forEach(function(t) {
       var cls = t.isDone ? 'done' : '';
       var ts = t.isDone ? '已记录 ' + t.time : (t.trackSteps ? '已走' + getTodaySteps() + '步 · 点击更新' : '待完成');
-      var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + (t.emoji || '') + ' ' + (t.isDone ? ('已' + t.title.replace(/^已/, '')) : t.title);
+      var tt = (t.pinned && !t.isDone ? '<span style="color:var(--orange);font-size:11px;font-weight:700">[置顶]</span> ' : '') + (t.emoji || '') + ' ' + t.title;
       th += '<div class="ti ' + cls + '" onclick="toggleTask(\'' + m.id + '\',\'' + t.id + '\')">'
         + '<div class="tico"><div class="chk">'
         + (t.isDone ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : '')
