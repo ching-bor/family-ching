@@ -132,10 +132,11 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 .calarr:active{transform:scale(.9)}
 /* 搜索栏 */
 .search-bar{display:flex;align-items:center;background:#fff;border-radius:28px;padding:0 6px 0 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.search-bar input{flex:1;background:none;border:none;outline:none;color:#333;font-size:15px;font-weight:500;padding:14px 0;font-family:inherit}
-.search-bar input::placeholder{color:#bbb;font-weight:400;font-style:italic}
-.search-btn{width:36px;height:36px;border-radius:50%;background:#f0f0f0;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;font-size:18px;font-weight:300;transition:all .2s;flex-shrink:0}
-.search-btn:active{background:#e0e0e0;color:#555}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:#999;font-size:13px;font-weight:300;padding:14px 0;font-family:inherit}
+.search-bar input::placeholder{color:#bbb;font-weight:300;font-style:italic}
+.search-btn{width:36px;height:36px;border-radius:50%;background:#f0f0f0;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aaa;transition:all .2s;flex-shrink:0}
+.search-btn svg{width:16px;height:16px}
+.search-btn:active{background:#e0e0e0}
 </style>
 </head>
 <body>
@@ -157,7 +158,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="flt-panel" id="fltPanel"><div class="flt-panel-inner" id="fltPanelInner"></div></div>
 </div>
 
-<div class="search-bar"><input type="text" id="searchInput" placeholder="Less is more ..." readonly><button class="search-btn" onclick="shuffleQuote()">&gt;</button></div>
+<div class="search-bar"><input type="text" id="searchInput" placeholder="Less is more ..." readonly><button class="search-btn" onclick="shuffleQuote()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button></div>
 
 <div class="ms" id="memberBox"></div>
 </div>
