@@ -22,8 +22,8 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh;padding-bottom:110px;overflow-x:hidden}
 .wrap{max-width:480px;margin:0 auto;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center;margin:20px 0 24px}
-.header h1{font-size:34px;font-weight:800;letter-spacing:1px}
+.header{text-align:center;margin:20px 0 24px}
+.header h1{font-size:20px;font-weight:300;letter-spacing:1px;opacity:.4;display:inline}
 .bref{width:44px;height:44px;background:rgba(255,255,255,.07);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:var(--sd);border:1px solid rgba(255,255,255,.1);cursor:pointer;color:var(--green);transition:transform .2s}
 .bref:active{transform:scale(.9)}
 .scard{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:var(--glass);border-radius:var(--rld);padding:24px;box-shadow:var(--sd);margin-bottom:24px}
@@ -145,7 +145,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="ibnr" id="ibnr"><div class="ibnrt">安装到主屏幕，像 App 一样使用</div><button class="ibnrb" id="ibnrBtn">安装</button><button class="ibnrx" id="ibnrX">&times;</button></div>
 
 <div class="wrap">
-<div class="header"><h1>今日</h1></div>
+<div class="header"><h1>Today Note</h1></div>
 
 <div class="scard">
 <div class="shd"><div><h2>My Family</h2><div class="sdate" id="curDate"></div></div><div style="display:flex;align-items:center;gap:8px"><button class="flt-toggle" id="fltToggle" onclick="toggleFilterPanel()" title="筛选">+</button><button class="calbtn" onclick="openCalendarPage()" title="日历记录"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button></div></div>
