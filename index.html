@@ -157,7 +157,7 @@ body{background:url(bg.jpg) center/cover fixed;color:var(--txt);min-height:100vh
 <div class="flt-panel" id="fltPanel"><div class="flt-panel-inner" id="fltPanelInner"></div></div>
 </div>
 
-<div class="search-bar"><input type="text" id="searchInput" placeholder="Less is more ..." readonly><button class="search-btn">&gt;</button></div>
+<div class="search-bar"><input type="text" id="searchInput" placeholder="Less is more ..." readonly><button class="search-btn" onclick="shuffleQuote()">&gt;</button></div>
 
 <div class="ms" id="memberBox"></div>
 </div>
@@ -345,11 +345,25 @@ function toast(msg) {
   setTimeout(function() { t.classList.remove('show'); }, 2000);
 }
 
-/* 搜索 */
-function doSearch() {
-  var q = document.getElementById('searchInput').value.trim();
-  if (!q) return;
-  window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(q), '_blank');
+/* 随机格言 */
+var quotes = [
+  '为平凡亦能发光，坚持终抵理想远方',
+  '不惧世间风浪，以热忱奔赴万丈光芒',
+  '步履不停追光，岁月不负努力之人',
+  '心中常驻暖阳，再难也能逆风生长',
+  '前路浩荡，未来皆亮',
+  '心若澄澈明亮，所见皆是温柔风景',
+  '不纠结过往遗憾，满心期待明日晨光',
+  '少怨世事不如意，多寻人间小美好',
+  '慢下来治愈自己，生活自有小惊喜',
+  '凡事向好，自在心安',
+  '允许一切发生，从容与生活和解',
+  '心宽一寸，路宽一丈',
+  '看淡得失，尽享清欢'
+];
+function shuffleQuote() {
+  var i = Math.floor(Math.random() * quotes.length);
+  document.getElementById('searchInput').value = quotes[i];
 }
 
 /* 初始化 */
